@@ -1,0 +1,5 @@
+This is Palantir, a portable VNC client. It uses the SDL and SDL_net libraries for portable graphics, input, and network access, and has been tested on Mac OS X and x86 Linux.
+
+Docs are sparse right now. Source code documentation is available via Doxygen. Type "make docs" to generate HTML technical docs.
+
+This software is released under Overcode's Source License (http://www.overcode.net/~overcode/osl.txt).

@@ -11,9 +11,17 @@
 using namespace std;
 
 #define GET_UINT32( var ) m_net.ReceiveBytes( (Uint8*)&var, 4 ); var = VNC_SWAP_BE_32( var );
+#define GET_UINT32_NOSWAP( var ) m_net.ReceiveBytes( (Uint8*)&var, 4 );
+
 #define NET_UINT32( var ) Uint32 var; GET_UINT32( var );
+#define NET_UINT32_NOSWAP( var ) Uint32 var; GET_UINT32_NOSWAP( var );
+
 #define GET_UINT16( var ) m_net.ReceiveBytes( (Uint8*)&var, 2 ); var = VNC_SWAP_BE_16( var );
+#define GET_UINT16_NOSWAP( var ) m_net.ReceiveBytes( (Uint8*)&var, 2 );
+
 #define NET_UINT16( var ) Uint16 var; GET_UINT16( var );
+#define NET_UINT16_NOSWAP( var ) Uint16 var; GET_UINT16_NOSWAP( var );
+
 #define NET_UINT8( var ) Uint8 var; m_net.ReceiveBytes( &var, 1 );
 
 
@@ -34,20 +42,20 @@ namespace VNC
 		switch( bpp )
 		{
 		case 1:
-			{
+			{				
 				NET_UINT8( val );
 				return (Uint32)val;
 			}
 			
 		case 2:
 			{
-				NET_UINT16( val );
+				NET_UINT16_NOSWAP( val );
 				return (Uint32)val;
 			}
 			
 		case 4:
 			{
-				NET_UINT32( val );
+				NET_UINT32_NOSWAP( val );
 				return (Uint32)val;
 			}
 			

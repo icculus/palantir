@@ -9,6 +9,7 @@
 #include <cassert>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 #include "vnc.h"
 #include "vnc-sdl.h"
 #include <SDL/SDL_thread.h>

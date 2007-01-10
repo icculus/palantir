@@ -11,7 +11,7 @@ CXXFLAGS += -g
 # change this for the platform
 # x86:     VNC_LITTLE_ENDIAN
 # powerpc: VNC_BIG_ENDIAN
-CXXFLAGS += -DVNC_BIG_ENDIAN
+CXXFLAGS += -DVNC_LITTLE_ENDIAN
 
 .PHONY: docs clean default
 

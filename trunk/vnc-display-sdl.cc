@@ -184,7 +184,13 @@ namespace VNC
 			case SDL_MOUSEBUTTONDOWN:
 				{
 					int mouse_x, mouse_y;
-					int mouse_buttons = SDL_GetMouseState( &mouse_x, &mouse_y );
+					const int origbuttons = SDL_GetMouseState( &mouse_x, &mouse_y );
+                    /* swap buttons 2 and 3 */
+                    int mouse_buttons = origbuttons & (~(SDL_BUTTON_RMASK | SDL_BUTTON_MMASK));
+                    if (origbuttons & SDL_BUTTON_RMASK)
+                        mouse_buttons |= SDL_BUTTON_MMASK;
+                    if (origbuttons & SDL_BUTTON_MMASK)
+                        mouse_buttons |= SDL_BUTTON_RMASK;
 					m_rfb.SendMouseEventMessage( mouse_x, mouse_y, mouse_buttons );
 				}				
 				break;

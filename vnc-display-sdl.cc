@@ -174,25 +174,46 @@ namespace VNC
 	bool SDLDisplay::UpdateInput()
 	{
 		SDL_Event event;
-		
+		static Uint8 mouse_buttons = 0;
+
 		if( SDL_WaitEvent( &event ) )
 		{
 			switch( event.type )
 			{
-			case SDL_MOUSEMOTION:
 			case SDL_MOUSEBUTTONUP:
+				{
+					/* swap buttons 2 and 3 (middle and right). */
+					Uint8 button = event.button.button;
+					if( button == 2 )
+						button = 3;
+					else if( button == 3 )
+						button = 2;
+
+					button--;
+					mouse_buttons &= ~(1 << button);
+					m_rfb.SendMouseEventMessage( event.button.x, event.button.y, mouse_buttons );
+				}
+				break;
+
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					int mouse_x, mouse_y;
-					const int origbuttons = SDL_GetMouseState( &mouse_x, &mouse_y );
-                    /* swap buttons 2 and 3 */
-                    int mouse_buttons = origbuttons & (~(SDL_BUTTON_RMASK | SDL_BUTTON_MMASK));
-                    if (origbuttons & SDL_BUTTON_RMASK)
-                        mouse_buttons |= SDL_BUTTON_MMASK;
-                    if (origbuttons & SDL_BUTTON_MMASK)
-                        mouse_buttons |= SDL_BUTTON_RMASK;
-					m_rfb.SendMouseEventMessage( mouse_x, mouse_y, mouse_buttons );
-				}				
+					/* swap buttons 2 and 3 (middle and right). */
+					Uint8 button = event.button.button;
+					if( button == 2 )
+						button = 3;
+					else if( button == 3 )
+						button = 2;
+
+					button--;
+					mouse_buttons |= (1 << button);
+					m_rfb.SendMouseEventMessage( event.button.x, event.button.y, mouse_buttons );
+				}
+				break;
+
+			case SDL_MOUSEMOTION:
+				{
+					m_rfb.SendMouseEventMessage( event.motion.x, event.motion.y, mouse_buttons );
+				}
 				break;
 
 			case SDL_KEYUP:

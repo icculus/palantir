@@ -174,46 +174,19 @@ namespace VNC
 	bool SDLDisplay::UpdateInput()
 	{
 		SDL_Event event;
-		static Uint8 mouse_buttons = 0;
-
+		
 		if( SDL_WaitEvent( &event ) )
 		{
 			switch( event.type )
 			{
+			case SDL_MOUSEMOTION:
 			case SDL_MOUSEBUTTONUP:
-				{
-					/* swap buttons 2 and 3 (middle and right). */
-					Uint8 button = event.button.button;
-					if( button == 2 )
-						button = 3;
-					else if( button == 3 )
-						button = 2;
-
-					button--;
-					mouse_buttons &= ~(1 << button);
-					m_rfb.SendMouseEventMessage( event.button.x, event.button.y, mouse_buttons );
-				}
-				break;
-
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					/* swap buttons 2 and 3 (middle and right). */
-					Uint8 button = event.button.button;
-					if( button == 2 )
-						button = 3;
-					else if( button == 3 )
-						button = 2;
-
-					button--;
-					mouse_buttons |= (1 << button);
-					m_rfb.SendMouseEventMessage( event.button.x, event.button.y, mouse_buttons );
-				}
-				break;
-
-			case SDL_MOUSEMOTION:
-				{
-					m_rfb.SendMouseEventMessage( event.motion.x, event.motion.y, mouse_buttons );
-				}
+					int mouse_x, mouse_y;
+					int mouse_buttons = SDL_GetMouseState( &mouse_x, &mouse_y );
+					m_rfb.SendMouseEventMessage( mouse_x, mouse_y, mouse_buttons );
+				}				
 				break;
 
 			case SDL_KEYUP:
@@ -242,7 +215,6 @@ namespace VNC
 		{
 		case 1:   Setup8bpp();     break;
 		case 2:   Setup16or32bit();  break;
-		case 3:   Setup16or32bit();  break;
 		case 4:   Setup16or32bit(); break;
 		default:  throw Exc( "strange color depth returned from SDL" );
 		}		
@@ -338,24 +310,9 @@ namespace VNC
 	void SDLDisplay::WritePixels( int x, int y, int count, Uint8* data )
 	{
 		int bpp = m_display->format->BytesPerPixel;
-		if (bpp == 3) 
-		{
-			Uint8* pixels = (Uint8*)m_display->pixels + m_display->pitch * y + x * bpp;
-			while (count >= 0) {		
-				*pixels++ = *data++;
-				*pixels++ = *data++;
-				*pixels++ = *data++;
-				*data++;
-			    count--;
-			}
-		}
-		else
-		{
-			Uint8* pixels = (Uint8*)m_display->pixels;
-			memcpy( pixels + m_display->pitch * y + x * bpp, data, count * bpp );
-		}
+		Uint8* pixels = (Uint8*)m_display->pixels;
+		memcpy( pixels + m_display->pitch * y + x * bpp, data, count * bpp );
 	}
-
 	
 	void SDLDisplay::WriteUniformPixels( int x, int y, int count, Uint32 pixel )
 	{
@@ -379,18 +336,6 @@ namespace VNC
 				{
 					*pixels = val;
 					++pixels;
-				}
-			}
-			break;
-		case 3:
-			{
-				Uint8* pixels = (Uint8*)((Uint8*)m_display->pixels + m_display->pitch * y) + x * bpp;
-				while( count > 0 )
-				{
-					*pixels++ = pixel & 0xff;
-		            *pixels++ = (pixel >> 8) & 0xff;
-		            *pixels++ = (pixel >> 16) & 0xff;
-		            count--;
 				}
 			}
 			break;

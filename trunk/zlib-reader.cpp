@@ -1,4 +1,8 @@
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <zlib.h>
+
 #include "zlib-reader.h"
 
 using namespace std;
@@ -32,7 +36,7 @@ namespace VNC
 
 	void ZlibReader::SetStream( Uint8* input, int size )
 	{
-		cerr << "stream has " << size << " bytes" << endl;
+		//cerr << "stream has " << size << " bytes" << endl;
 		m_zs.next_in = (Bytef*)input;
 		m_zs.avail_in = size;
 	}

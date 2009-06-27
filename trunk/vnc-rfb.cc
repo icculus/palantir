@@ -7,6 +7,7 @@
 #include "vnc.h"
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 extern "C" {
 #include "d3des.h"

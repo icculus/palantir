@@ -32,6 +32,7 @@
 #define RFB_ENCODING_RRE      2   //!< rise and run length encoding
 #define RFB_ENCODING_CORRE    4   //!< compact rise and run length encoding
 #define RFB_ENCODING_HEXTILE  5   //!< 16x16 tile encoding
+#define RFB_ENCODING_ZLIB     6   //!< zlib-compressed raw pixel data
 #define RFB_ENCODING_ZRLE     16  //!< zipped RLE encoding
 
 #define RFB_ENCODING_NAME_RAW       "Raw"
@@ -40,6 +41,7 @@
 #define RFB_ENCODING_NAME_CORRE     "CoRRE"
 #define RFB_ENCODING_NAME_HEXTILE   "Hextile"
 #define RFB_ENCODING_NAME_ZRLE      "ZRLE"
+#define RFB_ENCODING_NAME_ZLIB      "ZLIB"
 
 #define RFB_ENCODING_DESC_RAW       "raw pixel data without compression"
 #define RFB_ENCODING_DESC_COPYRECT  "fast copy within framebuffer"
@@ -47,6 +49,7 @@
 #define RFB_ENCODING_DESC_CORRE     "compact rise and run length encoded pixel data (CoRRE)"
 #define RFB_ENCODING_DESC_HEXTILE   "16x16 tile encoded pixel data (hextile)"
 #define RFB_ENCODING_DESC_ZRLE      "zlib-compressed RLE pixel data (ZRLE)"
+#define RFB_ENCODING_DESC_ZLIB      "zlib-compressed raw pixel data"
 
 #define RFB_HEXTILE_RAW                    1     //!< tile sent as raw pixels; other bits irrelevant
 #define RFB_HEXTILE_BG_SPECIFIED           2     //!< background color for this tile follows
@@ -557,6 +560,12 @@ namespace VNC
 //		VNC_DECODER_INTERFACE( ZRLE );
 //		ZlibReader m_zlib_reader;   //!< zlib input stream
 //	};
+	
+	class VNC_DECODER( ZLIB ) : public Decoder
+	{
+		VNC_DECODER_INTERFACE( ZLIB );
+		ZlibReader m_zlib_reader;   //!< zlib input stream
+	};
 	
 };
 

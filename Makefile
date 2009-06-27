@@ -1,8 +1,8 @@
 DOXYGEN = doxygen
 
 CLIENT_HEADERS += vnc.h vnctypes.h vnc-sdl.h d3des.h
-CLIENT_OBJ += main.o vnc-rfb.o vnc-net-sdl.o d3des.o vnc-display.o vnc-display-sdl.o vnc-encoding-raw.o vnc-encoding-copyrect.o vnc-encoding-rre.o vnc-encoding-hextile.o
-CLIENT_LIBS += `sdl-config --libs` -lSDL_net
+CLIENT_OBJ += main.o vnc-rfb.o vnc-net-sdl.o d3des.o vnc-display.o vnc-display-sdl.o vnc-encoding-raw.o vnc-encoding-copyrect.o vnc-encoding-rre.o vnc-encoding-hextile.o zlib-reader.o vnc-encoding-zlib.o
+CLIENT_LIBS += `sdl-config --libs` -lSDL_net -lz
 CXXFLAGS += `sdl-config --cflags` -W -Wall -D_REENTRANT
 
 # for debugging

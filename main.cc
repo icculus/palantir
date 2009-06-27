@@ -67,7 +67,7 @@ int main( int argc, char* argv[] )
 	int opt_port = VNC_DEFAULT_PORT;
 	char const* opt_hostname = NULL;
 	bool opt_verbose = false;
-	bool opt_enable_hextile = true, opt_enable_corre = true, opt_enable_rre = true, opt_enable_zrle = true, opt_enable_copyrect = true;
+	bool opt_enable_hextile = true, opt_enable_corre = true, opt_enable_rre = true, opt_enable_zrle = true, opt_enable_copyrect = true, opt_enable_zlib = true;
 	
 	while( ( ch = getopt( argc, argv, "va:p:d:" ) ) != -1 )
 	{
@@ -100,6 +100,7 @@ int main( int argc, char* argv[] )
 				else if( !strcasecmp( optarg, "rre" ) )       { opt_enable_rre = false; }
 				else if( !strcasecmp( optarg, "zrle" ) )      { opt_enable_zrle = false; }
 				else if( !strcasecmp( optarg, "copyrect" ) )  { opt_enable_copyrect = false; }
+				else if( !strcasecmp( optarg, "zlib" ) )      { opt_enable_zlib = false; }
 				else { Usage( program_path ); return 1; }
 			}
 			break;
@@ -143,6 +144,7 @@ int main( int argc, char* argv[] )
 		// Create decoders in order of preference.
 		vector< VNC::Decoder* > decoders;
 //		::VNC::VNC_DECODER( ZRLE ) dec_zrle( client ); if( opt_enable_zrle ) decoders.push_back( &dec_zrle );
+		::VNC::VNC_DECODER( ZLIB ) dec_zlib( client ); if( opt_enable_zlib ) decoders.push_back( &dec_zlib );
 		::VNC::VNC_DECODER( HEXTILE ) dec_hextile( client ); if( opt_enable_hextile ) decoders.push_back( &dec_hextile );
 		::VNC::VNC_DECODER( CORRE ) dec_corre( client ); if( opt_enable_corre ) decoders.push_back( &dec_corre );
 		::VNC::VNC_DECODER( RRE ) dec_rre( client ); if( opt_enable_rre ) decoders.push_back( &dec_rre );
@@ -187,7 +189,7 @@ int main( int argc, char* argv[] )
 			throw VNC::Exc( "unable to create network thread" );
 		
 		// Run!
-		while( display.Update() );
+		while( display.Update() ) { };
 		
 		// End the network thread.
  		if( opt_verbose ) cerr << "Shutting down." << endl;

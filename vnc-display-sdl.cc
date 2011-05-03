@@ -341,7 +341,7 @@ namespace VNC
 		if (bpp == 3) 
 		{
 			Uint8* pixels = (Uint8*)m_display->pixels + m_display->pitch * y + x * bpp;
-			while (count >= 0) {		
+			while (count > 0) {
 				*pixels++ = *data++;
 				*pixels++ = *data++;
 				*pixels++ = *data++;

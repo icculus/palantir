@@ -5,6 +5,7 @@
 */
 
 #include "vnc.h"
+#include <stdio.h>
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -110,7 +111,7 @@ namespace VNC
 		m_rfb_major_version = 3;
 		m_rfb_minor_version = 3;
 
-		sprintf( buf, "RFB 003.003\n" );
+		snprintf( buf, sizeof (buf), "RFB 003.003\n" );
 		m_net.SendBytes( (Uint8*)buf, 12 );
 	}
 
